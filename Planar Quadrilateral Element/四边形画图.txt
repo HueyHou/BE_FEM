@@ -1,0 +1,23 @@
+%%%%%%%%%%%
+%%%%加在主程序后面%%%%%%%
+%%%%%%%%%%%%%
+
+U=zeros(NP,2);
+
+for i=1:NP
+    U(i,1)=u(2*i-1,1);
+    U(i,2)=u(2*i,1);
+end%位移矩阵
+
+MUU=MP+U;
+%形变后的点坐标
+
+for i=1:NE
+    ML=ME(i,1);  %单元1节点的序号
+    MR=ME(i,2);  %单元2节点的序号
+    MT=ME(i,3);  %单元3节点的序号
+    MU=ME(i,4);  %单元4节点的序号
+    plot([MP(ML,1),MP(MR,1),MP(MT,1),MP(MU,1)],[MP(ML,2),MP(MR,2),MP(MT,2),MP(MU,2)],'k')
+    plot([MUU(ML,1),MUU(MR,1),MUU(MT,1),MUU(MU,1)],[MUU(ML,2),MUU(MR,2),MUU(MT,2),MUU(MU,2)],'r')
+    hold on
+end

@@ -1,0 +1,72 @@
+function[u,F]=hottestofsolve(NP,NR,NRR,K,FT)
+%可以用来求解三角形/四边形单元热力学问题
+%NP:节点数
+%NL：已知载荷数
+%NR：位移约束个数
+%NRR：位移约束向量
+%K：总刚度矩阵
+%LL:已知载荷信息列向量
+%FT:热应力矩阵
+
+NF=2;
+%一个节点的自由度
+
+NDF=NF*NP;%维度
+
+
+P=FT;
+%把热应力和载荷合在一起
+
+q=0;
+
+for i=1:NR
+    if NRR(i,2)~=0
+        for i=1:NDF
+            for j=1:NDF
+                   o=abs(K(i,j));
+                   if q<=o
+                       q=o;
+                   end
+            end
+        end
+    end
+end
+
+%判断是否需要生成大数
+        
+aa=q*10^4;
+%对角大数的大数
+        
+
+Z=K;%备份总体刚度阵
+
+
+for i=1:NR
+    f=NRR(i,1);
+    
+    if NRR(i,2)==0
+         K(f,:)=0;
+         K(:,f)=0;
+         K(f,f)=1;
+    else
+          K(f,f)=aa*K(f,f);
+    end%对角大数法
+    
+end
+
+for i=1:NR
+    f=NRR(i,1);
+    
+    if NRR(i,2)==0
+        P(f)=0;
+    else
+    P(f)=K(f,f)*NRR(i,2);
+    end
+   
+end%对角大数的力处理
+
+u=K^(-1)*P;%位移向量
+
+F=Z*u;%力向量
+
+end
